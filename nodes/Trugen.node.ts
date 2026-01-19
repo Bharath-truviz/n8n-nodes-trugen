@@ -45,12 +45,12 @@ export class Trugen implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Trugen',
 		name: 'trugen',
-		icon: 'file:trugen.svg',
+		icon: { light: 'file:trugen.svg', dark: 'file:trugen.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		usableAsTool: true,
 		description: 'Create agents, list avatars, and fetch conversations from Trugen',
-		defaults: { name: 'Trugen' },
+		defaults: { name: 'TruGen' },
 		inputs: <NodeConnectionType[]>['main'],
 		outputs: <NodeConnectionType[]>['main'],
 		credentials: [{ name: 'trugenApi', required: true }],
@@ -248,24 +248,24 @@ export class Trugen implements INodeType {
 			{
 				displayName: 'STT Provider',
 				name: 'sttProvider',
-				type: 'multiOptions',
+				type: 'options',
 				options: [
 					{ name: 'Deepgram', value: 'deepgram' },
 					{ name: 'Deepgram V2', value: 'deepgram-v2' },
 				],
-				default: ['deepgram'],
+				default: 'deepgram',
 				displayOptions: { show: { operation: ['createAgent'] } },
 			},
 			{
 				displayName: 'STT Model',
 				name: 'sttModel',
-				type: 'multiOptions',
+				type: 'options',
 				options: [
 					{ name: 'Nova 3', value: 'nova-3' },
 					{ name: 'Nova 2', value: 'nova-2' },
 					{ name: 'Flux General English', value: 'flux-general-en' },
 				],
-				default: ['nova-3'],
+				default: 'nova-3',
 				displayOptions: { show: { operation: ['createAgent'] } },
 			},
 			{
