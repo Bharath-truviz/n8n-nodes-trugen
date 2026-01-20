@@ -16,7 +16,7 @@ const trugenHelpers = {
 			try {
 				formatted = JSON.parse(formatted);
 			} catch {
-				return { data: formatted };
+				return { data: formatted as string };
 			}
 		}
 
@@ -45,7 +45,7 @@ export class Trugen implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Trugen',
 		name: 'trugen',
-		icon: { light: 'file:trugen.svg', dark: 'file:trugen.dark.svg' },
+		icon: { light: 'file:logo.svg', dark: 'file:logo.dark.svg' },
 		group: ['transform'],
 		version: 1,
 		usableAsTool: true,
@@ -396,6 +396,10 @@ export class Trugen implements INodeType {
 				} else if (this.getNodeParameter('llmProvider', i) === 'google') {
 					llmModel = this.getNodeParameter('llmModel_google', i) as string;
 				}
+				const maxSessionLengthMinutes = this.getNodeParameter(
+					'maxSessionLengthMinutes',
+					i,
+				) as number;
 				const body: IDataObject = {
 					agent_name: this.getNodeParameter('name', i),
 					agent_system_prompt: this.getNodeParameter('system_prompt', i),
@@ -430,7 +434,7 @@ export class Trugen implements INodeType {
 						},
 					],
 					config: {
-						timeout: this.getNodeParameter('maxSessionLengthMinutes', i) * 60,
+						timeout: maxSessionLengthMinutes,
 					},
 				};
 
