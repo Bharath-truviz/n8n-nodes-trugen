@@ -13,10 +13,6 @@ export interface AgentSpeakingPayload extends BasePayload {
 	text: string;
 }
 
-export interface UserSpeakingPayload extends BasePayload {
-	// Empty in documentation examples
-}
-
 export interface ParticipantLeftPayload extends BasePayload {
 	id: string;
 }
@@ -37,7 +33,6 @@ export interface WebhookEvent {
 	name: string;
 	payload:
 		| AgentSpeakingPayload
-		| UserSpeakingPayload
 		| ParticipantLeftPayload
 		| UtteranceCommittedPayload
 		| MaxCallDurationPayload
