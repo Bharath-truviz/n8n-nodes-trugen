@@ -43,7 +43,6 @@
 		"@n8n/node-cli": "*",
 		"eslint": "9.32.0",
 		"gulp": "^5.0.1",
-		"merge-stream": "^2.0.0",
 		"n8n-core": "^1.122.10",
 		"n8n-workflow": "^1.120.6",
 		"prettier": "3.6.2",

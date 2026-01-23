@@ -1,26 +1,12 @@
 const path = require('path');
-const { src, dest, series, task } = require('gulp');
-const merge = require('merge-stream');
+const { src, dest } = require('gulp');
 
-/**
- * Copy node & credential icons (svg/png) into dist/
- * Required for n8n light/dark theme icons to work
- */
 function copyIcons() {
-	const nodeIcons = src(path.resolve('nodes', '**', '*.{svg,png}'), { allowEmpty: true }).pipe(
-		dest(path.resolve('dist', 'nodes')),
-	);
-
-	const credentialIcons = src(path.resolve('credentials', '**', '*.{svg,png}'), {
-		allowEmpty: true,
-	}).pipe(dest(path.resolve('dist', 'credentials')));
-
-	return merge(nodeIcons, credentialIcons);
+	return src(
+		[path.resolve('nodes', '**', '*.{svg,png}'), path.resolve('credentials', '**', '*.{svg,png}')],
+		{ allowEmpty: true },
+	).pipe(dest(path.resolve('dist')));
 }
 
-task('build:icons', copyIcons);
-
-module.exports = {
-	copyIcons,
-	build: series(copyIcons),
-};
+exports['build:icons'] = copyIcons;
+exports.build = copyIcons;
