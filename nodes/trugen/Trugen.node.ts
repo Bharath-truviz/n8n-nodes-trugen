@@ -50,9 +50,7 @@ export class Trugen implements INodeType {
 		version: 1,
 		usableAsTool: true,
 		description: 'Create agents, list avatars, and fetch conversations from Trugen',
-		defaults: {
-			name: 'Trugen',
-		},
+		defaults: { name: 'Trugen' },
 		inputs: <NodeConnectionType[]>['main'],
 		outputs: <NodeConnectionType[]>['main'],
 		credentials: [{ name: 'trugenApi', required: true }],
@@ -70,9 +68,6 @@ export class Trugen implements INodeType {
 				],
 				default: 'createAgent',
 			},
-
-			/* ------------------------- CREATE AGENT ------------------------- */
-
 			{
 				displayName: 'Agent Name',
 				name: 'name',
@@ -90,6 +85,13 @@ export class Trugen implements INodeType {
 				displayOptions: { show: { operation: ['createAgent'] } },
 			},
 			{
+				displayName: 'Greeting',
+				name: 'greeting',
+				type: 'string',
+				default: 'Hello! How can I help you today?',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
 				displayName: 'Avatar Source',
 				name: 'avatarSource',
 				type: 'options',
@@ -104,7 +106,7 @@ export class Trugen implements INodeType {
 				displayName: 'Stock Avatar ID',
 				name: 'avatarStockId',
 				type: 'string',
-				default: '',
+				default: '665a1170',
 				displayOptions: {
 					show: { operation: ['createAgent'], avatarSource: ['stock'] },
 				},
@@ -113,28 +115,138 @@ export class Trugen implements INodeType {
 				displayName: 'Avatar ID',
 				name: 'avatarId',
 				type: 'string',
-				default: '',
+				default: '665a1170',
 				displayOptions: {
 					show: { operation: ['createAgent'], avatarSource: ['manual'] },
 				},
 			},
 			{
-				displayName: 'Greeting',
-				name: 'greeting',
+				displayName: 'LLM Provider',
+				name: 'llmProvider',
+				type: 'options',
+				options: [
+					{ name: 'OpenAI', value: 'openai' },
+					{ name: 'Groq', value: 'groq' },
+					{ name: 'Google', value: 'google' },
+				],
+				default: 'openai',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'LLM Model (OpenAI)',
+				name: 'llmModel_openai',
+				type: 'options',
+				options: [
+					{ name: 'GPT-4.1 Mini', value: 'gpt-4.1-mini' },
+					{ name: 'GPT-4.1 Nano', value: 'gpt-4.1-nano' },
+					{ name: 'GPT-4.1', value: 'gpt-4.1' },
+				],
+				default: 'gpt-4.1-mini',
+				displayOptions: {
+					show: { operation: ['createAgent'], llmProvider: ['openai'] },
+				},
+			},
+			{
+				displayName: 'LLM Model (Groq)',
+				name: 'llmModel_groq',
 				type: 'string',
-				default: 'Hello! How can I help you today?',
+				default: 'meta-llama/llama-4-maverick-17b-128e-instruct',
+				displayOptions: {
+					show: { operation: ['createAgent'], llmProvider: ['groq'] },
+				},
+			},
+			{
+				displayName: 'LLM Model (Google)',
+				name: 'llmModel_google',
+				type: 'string',
+				default: 'gemini-2.5-flash',
+				displayOptions: {
+					show: { operation: ['createAgent'], llmProvider: ['google'] },
+				},
+			},
+			{
+				displayName: 'TTS Provider',
+				name: 'ttsProvider',
+				type: 'options',
+				options: [{ name: 'ElevenLabs', value: 'elevenlabs' }],
+				default: 'elevenlabs',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'TTS Model',
+				name: 'ttsModel_elevenlabs',
+				type: 'string',
+				default: 'eleven_turbo_v2_5',
+				displayOptions: {
+					show: { operation: ['createAgent'], ttsProvider: ['elevenlabs'] },
+				},
+			},
+			{
+				displayName: 'TTS Voice ID',
+				name: 'ttsVoiceId',
+				type: 'string',
+				default: 'FGY2WhTYpPnrIDTdsKH5',
+				displayOptions: {
+					show: { operation: ['createAgent'], ttsProvider: ['elevenlabs'] },
+				},
+			},
+			{
+				displayName: 'STT Provider',
+				name: 'sttProvider',
+				type: 'options',
+				options: [
+					{ name: 'Deepgram', value: 'deepgram' },
+					{ name: 'Deepgram V2', value: 'deepgram-v2' },
+				],
+				default: 'deepgram',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'STT Model',
+				name: 'sttModel',
+				type: 'string',
+				default: 'nova-3',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'STT Language',
+				name: 'sttLanguage',
+				type: 'string',
+				default: 'en',
 				displayOptions: { show: { operation: ['createAgent'] } },
 			},
 			{
 				displayName: 'Max Session Length (Minutes)',
 				name: 'maxSessionLengthMinutes',
 				type: 'number',
-				default: 30,
+				default: 5,
 				displayOptions: { show: { operation: ['createAgent'] } },
 			},
-
-			/* ---------------------------- GET CONVERSATION ---------------------------- */
-
+			{
+				displayName: 'Record Calls',
+				name: 'record',
+				type: 'boolean',
+				default: true,
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'Callback Events',
+				name: 'callback_events',
+				type: 'multiOptions',
+				default: [],
+				options: [
+					{ name: 'Call Ended', value: 'call_ended' },
+					{ name: 'Agent Interrupted', value: 'agent.interrupted' },
+				],
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
+			{
+				displayName: 'Callback URL',
+				name: 'callback_url',
+				type: 'string',
+				default: '',
+				displayOptions: { show: { operation: ['createAgent'] } },
+			},
 			{
 				displayName: 'Conversation ID',
 				name: 'conversation_id',
@@ -156,27 +268,49 @@ export class Trugen implements INodeType {
 		for (let i = 0; i < items.length; i++) {
 			let response: unknown;
 
-			/* ------------------------- CREATE AGENT ------------------------- */
 			if (operation === 'createAgent') {
-				const avatarSource = this.getNodeParameter('avatarSource', i) as string;
+				const avatarSource = this.getNodeParameter('avatarSource', i);
 				const avatarId =
 					avatarSource === 'stock'
-						? (this.getNodeParameter('avatarStockId', i) as string)
-						: (this.getNodeParameter('avatarId', i) as string);
+						? this.getNodeParameter('avatarStockId', i)
+						: this.getNodeParameter('avatarId', i);
 
-				const maxSessionLengthMinutes = this.getNodeParameter(
-					'maxSessionLengthMinutes',
-					i,
-				) as number;
+				const llmProvider = this.getNodeParameter('llmProvider', i);
+				const llmModel =
+					llmProvider === 'openai'
+						? this.getNodeParameter('llmModel_openai', i)
+						: llmProvider === 'groq'
+							? this.getNodeParameter('llmModel_groq', i)
+							: this.getNodeParameter('llmModel_google', i);
+
+				const capabilities = this.getNodeParameter('capabilities', i, []) as string[];
 
 				const body: IDataObject = {
 					agent_name: this.getNodeParameter('name', i),
 					agent_system_prompt: this.getNodeParameter('system_prompt', i),
+					record: this.getNodeParameter('record', i),
+					callback_events: this.getNodeParameter('callback_events', i),
+					callback_url: this.getNodeParameter('callback_url', i),
 					avatars: [
 						{
 							avatar_key_id: avatarId,
 							persona_name: this.getNodeParameter('name', i),
 							persona_prompt: this.getNodeParameter('system_prompt', i),
+							config: {
+								llm: { provider: llmProvider, model: llmModel },
+								stt: {
+									provider: this.getNodeParameter('sttProvider', i),
+									model: this.getNodeParameter('sttModel', i),
+									language: this.getNodeParameter('sttLanguage', i),
+								},
+								tts: {
+									provider: this.getNodeParameter('ttsProvider', i),
+									model_id: this.getNodeParameter('ttsModel_elevenlabs', i),
+									voice_id: this.getNodeParameter('ttsVoiceId', i),
+								},
+								webcam: capabilities.includes('webcam_vision'),
+								screen: capabilities.includes('screen_vision'),
+							},
 							welcome_message: {
 								wait_time: 2,
 								messages: [this.getNodeParameter('greeting', i)],
@@ -184,7 +318,7 @@ export class Trugen implements INodeType {
 						},
 					],
 					config: {
-						timeout: maxSessionLengthMinutes * 60,
+						timeout: this.getNodeParameter('maxSessionLengthMinutes', i) * 60,
 					},
 				};
 
@@ -197,7 +331,6 @@ export class Trugen implements INodeType {
 				});
 			}
 
-			/* ------------------------- GET STOCK AVATARS ------------------------- */
 			if (operation === 'getAvatars') {
 				response = await this.helpers.httpRequest({
 					method: 'GET',
@@ -207,13 +340,13 @@ export class Trugen implements INodeType {
 				});
 			}
 
-			/* ------------------------- GET CONVERSATION ------------------------- */
 			if (operation === 'getConversation') {
-				const conversationId = this.getNodeParameter('conversation_id', i) as string;
-
 				response = await this.helpers.httpRequest({
 					method: 'GET',
-					url: `https://api.trugen.ai/v1/ext/conversation/${conversationId}`,
+					url: `https://api.trugen.ai/v1/ext/conversation/${this.getNodeParameter(
+						'conversation_id',
+						i,
+					)}`,
 					headers: { 'x-api-key': credentials.apiKey as string },
 					json: true,
 				});
