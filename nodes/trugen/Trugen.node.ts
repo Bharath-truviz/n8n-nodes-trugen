@@ -284,7 +284,10 @@ export class Trugen implements INodeType {
 							: this.getNodeParameter('llmModel_google', i);
 
 				const capabilities = this.getNodeParameter('capabilities', i, []) as string[];
-
+				const maxSessionLengthMinutes = this.getNodeParameter(
+					'maxSessionLengthMinutes',
+					i,
+				) as number;
 				const body: IDataObject = {
 					agent_name: this.getNodeParameter('name', i),
 					agent_system_prompt: this.getNodeParameter('system_prompt', i),
@@ -318,7 +321,7 @@ export class Trugen implements INodeType {
 						},
 					],
 					config: {
-						timeout: this.getNodeParameter('maxSessionLengthMinutes', i) * 60,
+						timeout: maxSessionLengthMinutes * 60,
 					},
 				};
 
